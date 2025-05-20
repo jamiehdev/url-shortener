@@ -1,8 +1,10 @@
 const ShortUrl = require('../models/shortUrl');
 const { generateShortUrl } = require('../utils');
 
+const BASE_URL = process.env.BASE_URL || 'http://localhost:5000';
+
 exports.shortenURL = async (req, res) => {
-    let shortUrl = generateShortUrl(7);
+    const shortUrl = generateShortUrl(7);
     const newUrl = new ShortUrl({ full: req.body.url, short: shortUrl });
 
     try {
@@ -13,7 +15,10 @@ exports.shortenURL = async (req, res) => {
         return;
     }
 
-    res.json({ originalUrl: req.body.url, shortUrl: 'http://localhost:5000/' + shortUrl });
+    res.json({
+        originalUrl: req.body.url,
+        shortUrl: `${BASE_URL}/${shortUrl}`
+    });
 };
 
 exports.redirectToURL = async (req, res) => {
@@ -24,8 +29,6 @@ exports.redirectToURL = async (req, res) => {
     );
 
     if (shortUrl == null) return res.sendStatus(404);
-
-    console.log("test");
 
     res.redirect(shortUrl.full);
 };
