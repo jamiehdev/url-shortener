@@ -1,7 +1,7 @@
-<form (submit)="shortenURL()">
+<form (ngSubmit)="shortenURL()">
   <input type="url" [(ngModel)]="url" name="url" required>
   <button type="submit">Shorten</button>
 </form>
 
 <!-- conditionally display the shortURL -->
-<a *ngIf="shortUrl" [href]="shortUrl">{{shortUrl}}</a>
+<a *ngIf="shortUrl" [href]="shortUrl" target="_blank" rel="noopener noreferrer">{{shortUrl}}</a>

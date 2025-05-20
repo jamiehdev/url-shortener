@@ -6,23 +6,30 @@ import { HttpClient } from '@angular/common/http';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
+interface ShortenResponse {
+  originalUrl: string;
+  shortUrl: string;
+}
+
 export class AppComponent {
   title = 'url-shortener';
-  url: string = '';
-  shortUrl: string = '';  // Declare shortURL
+  url = '';
+  shortUrl = '';
 
-  constructor(private http: HttpClient) {}  // Inject HttpClient
+  constructor(private http: HttpClient) {}
 
-  shortenURL() {
-    this.http.post('/api/shorten', {url: this.url}).subscribe(
-      (data: any) => {
+  shortenURL(): void {
+    if (!this.url) {
+      return;
+    }
+
+    this.http.post<ShortenResponse>('/api/shorten', { url: this.url }).subscribe({
+      next: (data) => {
         this.shortUrl = data.shortUrl;
-
-        console.log(data);
       },
-      (error) => {
-        console.error('Request failed with error ', error);
+      error: (err) => {
+        console.error('Request failed with error', err);
       }
-    );
+    });
   }
 }
